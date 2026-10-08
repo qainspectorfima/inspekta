@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Inspekta FIMA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="loginPage">
+    <div class="login-card">
+      <h2>Inspekta</h2>
+      <div class="subtitle">Sistem Manajemen Inspeksi IPC — FIMA</div>
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="email@perusahaan.com" autocomplete="username">
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary" id="btnLogin">Masuk</button>
+      <p id="loginError" style="color:#D32F2F; font-size:13px; margin-top:14px; display:none;"></p>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="mainApp">
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h3>Inspekta</h3>
+          <button class="toggle-btn" onclick="toggleSidebar()"><span class="material-icons">menu</span></button>
+        </div>
+      </div>
+
+      <div class="menu-title">Utama</div>
+      <div class="menu-item active" data-page="dashboard" onclick="showPage('dashboard')">
+        <span class="material-icons">dashboard</span><span class="menu-text">Dashboard</span>
+      </div>
+
+      <div class="menu-title">Master</div>
+      <div class="menu-item" data-page="master" onclick="showPage('master')">
+        <span class="material-icons">inventory_2</span><span class="menu-text">Master Data</span>
+      </div>
+
+      <div class="menu-title">Inspeksi</div>
+      <div class="menu-item" data-page="ipc" onclick="showPage('ipc')">
+        <span class="material-icons">fact_check</span><span class="menu-text">IPC Filling & Kemas</span>
+      </div>
+      <div class="menu-item" data-page="lpf" onclick="showPage('lpf')">
+        <span class="material-icons">assignment</span><span class="menu-text">LPF & Verifikasi</span>
+      </div>
+
+      <div class="menu-title">Tindak Lanjut</div>
+      <div class="menu-item" data-page="capa" onclick="showPage('capa')">
+        <span class="material-icons">build</span><span class="menu-text">Root Cause & CAPA</span>
+      </div>
+
+      <div class="menu-divider"></div>
+      <div class="menu-item" onclick="logout()">
+        <span class="material-icons">logout</span><span class="menu-text">Keluar</span>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="top-bar">
+        <h1 id="pageTitle">Dashboard</h1>
+        <div class="user-badge" id="userBadge">—</div>
+      </div>
+
+      <!-- DASHBOARD -->
+      <div id="page-dashboard" class="page-section active">
+        <div class="card">
+          <h3 style="margin-top:0; color:var(--primary);">Selamat datang di Inspekta v3</h3>
+          <p style="color:var(--muted); font-size:14px; line-height:1.6;">
+            Sistem Manajemen Inspeksi IPC Produksi — FIMA.<br>
+            Silakan buka menu <b>Master Data</b> untuk input produk & batch, lalu <b>IPC</b> untuk inspeksi.
+          </p>
+        </div>
+      </div>
+
+      <!-- MASTER -->
+      <div id="page-master" class="page-section">
+        <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="tabMasterPPI" onclick="switchMasterTab('masterppi')" style="width:auto;">Master PPI</button>
+          <button class="btn btn-outline" id="tabBatch" onclick="switchMasterTab('batch')" style="width:auto;">Batch Record</button>
+        </div>
+
+        <div id="master-masterppi">
+          <div class="card">
+            <h3 style="margin-top:0; color:var(--primary);">Tambah Master PPI</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="input-group"><label>Kode Produk</label><input type="text" id="mpKode"></div>
+              <div class="input-group"><label>Nama Produk</label><input type="text" id="mpNama"></div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="input-group"><label>Line</label><input type="text" id="mpLine"></div>
+              <div class="input-group">
+                <label>Jenis PPI</label>
+                <select id="mpJenis">
+                  <option value="FILLING">FILLING (Proses)</option>
+                  <option value="KEMAS">KEMAS</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="input-group"><label>Batch Size</label><input type="number" id="mpBatchSize"></div>
+              <div class="input-group"><label>Jumlah Lot</label><input type="number" id="mpJumlahLot" value="1" min="1"></div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="input-group"><label>No Dokumen</label><input type="text" id="mpNoDokumen"></div>
+              <div class="input-group"><label>Berlaku Tanggal</label><input type="date" id="mpBerlakuTanggal"></div>
+            </div>
+            <button class="btn btn-outline" onclick="hitungAnsiMasterPPI()" style="width:auto;margin-bottom:12px;">Hitung ANSI</button>
+            <div id="mpAnsiBox" style="display:none;background:#E8F4F8;border-left:4px solid #0084C9;padding:12px;border-radius:8px;margin-bottom:12px;font-size:13px;"></div>
+            <input type="hidden" id="mpAnsi1"><input type="hidden" id="mpAnsi2"><input type="hidden" id="mpAnsi3">
+            <button class="btn btn-primary" id="btnSimpanMasterPPI" onclick="submitMasterPPI()">Simpan Master PPI</button>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-top:0;">Daftar Master PPI</h3>
+            <select id="filterStatusPPI" onchange="loadMasterPPI()" style="padding:8px;border-radius:6px;border:1px solid #ddd;margin-bottom:10px;">
+              <option value="">Semua</option>
+              <option value="AKTIF" selected>AKTIF</option>
+              <option value="WIP">WIP</option>
+              <option value="OBSOLETE">OBSOLETE</option>
+            </select>
+            <div style="overflow-x:auto;">
+              <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                <thead>
+                  <tr style="background:#F8F9FA;">
+                    <th style="padding:8px;text-align:left;">Kode</th>
+                    <th style="padding:8px;text-align:left;">Nama</th>
+                    <th style="padding:8px;text-align:left;">Line</th>
+                    <th style="padding:8px;text-align:left;">Jenis</th>
+                    <th style="padding:8px;text-align:left;">No Dok</th>
+                    <th style="padding:8px;text-align:left;">ANSI</th>
+                    <th style="padding:8px;text-align:left;">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="bodyMasterPPI">
+                  <tr><td colspan="7" style="text-align:center;padding:16px;color:#999;">Belum ada data</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB BATCH -->
+        <div id="master-batch" style="display:none;">
+          <div class="card">
+            <h3 style="margin-top:0; color:var(--primary);">Buat Batch Record</h3>
+            <div class="input-group">
+              <label>Pilih Produk</label>
+              <select id="brProduct" onchange="onProductSelected()">
+                <option value="">-- Pilih Produk --</option>
+              </select>
+            </div>
+            <div id="brInfoProduk" style="display:none;background:#E8F0FE;padding:12px;border-radius:8px;margin-bottom:12px;font-size:13px;"></div>
+            <div class="input-group">
+              <label>No BN</label>
+              <input type="text" id="brNoBN" placeholder="BN2026001">
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
+              <div class="input-group"><label>MD</label><input type="text" id="brMD"></div>
+              <div class="input-group"><label>ED</label><input type="text" id="brED"></div>
+              <div class="input-group"><label>HET/RP</label><input type="text" id="brHetRp"></div>
+            </div>
+            <div class="input-group">
+              <label>Max Lot</label>
+              <input type="text" id="brMaxLot" placeholder="F">
+            </div>
+            <button class="btn btn-primary" id="btnSimpanBatch" onclick="submitBatchRecord()">Simpan Batch Record</button>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-top:0;">Daftar Batch Record</h3>
+            <div style="overflow-x:auto;">
+              <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                <thead>
+                  <tr style="background:#F8F9FA;">
+                    <th style="padding:8px;text-align:left;">No BN</th>
+                    <th style="padding:8px;text-align:left;">Produk</th>
+                    <th style="padding:8px;text-align:left;">Line</th>
+                    <th style="padding:8px;text-align:left;">Status</th>
+                    <th style="padding:8px;text-align:left;">Input By</th>
+                  </tr>
+                </thead>
+                <tbody id="bodyBatchRecord">
+                  <tr><td colspan="5" style="text-align:center;padding:16px;color:#999;">Belum ada data</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IPC placeholder pages remain in full version below via modules -->
+      <div id="page-ipc-placeholder" class="page-section" style="display:none;"></div>
+      <div id="page-lpf" class="page-section"><div class="card"><p>LPF & Verifikasi — Fase 3</p></div></div>
+      <div id="page-capa" class="page-section"><div class="card"><p>Root Cause & CAPA — Fase 4</p></div></div>
+      <div id="page-akun" class="page-section"><div class="card"><p>Manajemen Akun</p></div></div>
+    </div>
+  </div>
+
+  <script type="module" src="./js/app.js"></script>
+  <script type="module" src="./js/master-ui.js"></script>
+</body>
+</html>

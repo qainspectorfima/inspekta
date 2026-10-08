@@ -1,0 +1,153 @@
+:root {
+  --primary: #0A66C2;
+  --primary-light: #E8F0FE;
+  --bg: #F4F7F9;
+  --white: #FFFFFF;
+  --text: #333333;
+  --muted: #666666;
+  --border: #E0E0E0;
+  --success: #28a745;
+  --danger: #D32F2F;
+  --sidebar-w: 260px;
+}
+
+* { box-sizing: border-box; }
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  margin: 0; padding: 0;
+  background: var(--bg); color: var(--text);
+}
+
+/* LOGIN */
+#loginPage {
+  display: flex; justify-content: center; align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fff 0%, var(--primary-light) 100%);
+  padding: 20px;
+}
+.login-card {
+  background: var(--white);
+  padding: 40px 32px;
+  border-radius: 14px;
+  box-shadow: 0 8px 28px rgba(10,102,194,0.12);
+  width: 100%; max-width: 360px;
+  text-align: center;
+}
+.login-card h2 {
+  color: var(--primary); margin: 0 0 6px;
+  font-size: 26px; font-weight: 800;
+}
+.login-card .subtitle {
+  color: var(--muted); font-size: 13px; margin-bottom: 28px;
+}
+
+/* FORM */
+.input-group { margin-bottom: 16px; text-align: left; }
+.input-group label {
+  display: block; font-size: 13px; font-weight: 600;
+  margin-bottom: 6px;
+}
+.input-group input,
+.input-group select,
+.input-group textarea {
+  width: 100%; padding: 12px 14px;
+  border: 1px solid var(--border); border-radius: 8px;
+  font-family: inherit; font-size: 14px;
+}
+.input-group input:focus,
+.input-group select:focus {
+  border-color: var(--primary); outline: none;
+}
+
+/* BUTTON */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px; border: none; border-radius: 8px;
+  font-family: inherit; font-weight: 700; cursor: pointer;
+  padding: 12px 18px; font-size: 14px;
+}
+.btn-primary { background: var(--primary); color: #fff; width: 100%; }
+.btn-primary:hover { background: #0858a8; }
+.btn-primary:disabled { background: #999; cursor: not-allowed; }
+.btn-outline {
+  background: transparent; border: 1.5px solid var(--border); color: var(--text);
+}
+
+/* MAIN LAYOUT */
+#mainApp {
+  display: none;
+  height: 100vh;
+  flex-direction: row;
+  overflow: hidden;
+}
+.sidebar {
+  width: var(--sidebar-w); background: var(--white);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  padding: 12px 0; flex-shrink: 0; overflow-y: auto;
+}
+.sidebar-header {
+  padding: 8px 16px 16px; border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+.sidebar-header h3 {
+  margin: 0; color: var(--primary); font-size: 20px; font-weight: 800;
+}
+.toggle-btn {
+  background: none; border: none; cursor: pointer; color: #666;
+}
+.menu-item {
+  padding: 10px 16px; margin: 2px 10px; border-radius: 8px;
+  cursor: pointer; display: flex; align-items: center;
+  color: var(--muted); font-weight: 600; font-size: 13px;
+}
+.menu-item .material-icons { margin-right: 12px; font-size: 20px; }
+.menu-item:hover { background: #f5f5f5; }
+.menu-item.active { background: var(--primary-light); color: var(--primary); }
+.menu-title {
+  font-size: 10px; font-weight: 800; color: #aaa;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin: 14px 16px 6px;
+}
+.menu-divider { border-bottom: 1px solid var(--border); margin: 10px 14px; }
+
+.main-content {
+  flex: 1; padding: 24px; overflow-y: auto; background: var(--bg);
+}
+.top-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 24px; background: var(--white);
+  padding: 14px 20px; border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.top-bar h1 { margin: 0; font-size: 18px; }
+.user-badge {
+  background: var(--primary-light); color: var(--primary);
+  padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700;
+}
+
+.card {
+  background: var(--white); padding: 24px; border-radius: 12px;
+  border: 1px solid var(--border); margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.page-section { display: none; }
+.page-section.active { display: block; }
+
+#toastContainer {
+  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 8px; max-width: 340px;
+}
+.toast {
+  background: var(--white); border-left: 4px solid var(--primary);
+  padding: 12px 16px; border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  font-size: 13px; font-weight: 600;
+}
+.toast.success { border-left-color: var(--success); }
+.toast.error { border-left-color: var(--danger); }
+
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .main-content { padding: 14px; }
+}
