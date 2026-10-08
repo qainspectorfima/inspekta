@@ -23,18 +23,20 @@
         <label>Password</label>
         <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password">
       </div>
-      <button class="btn btn-primary" id="btnLogin">Masuk</button>
+      <button type="button" class="btn btn-primary" id="btnLogin">Masuk</button>
       <p id="loginError" style="color:#D32F2F; font-size:13px; margin-top:14px; display:none;"></p>
     </div>
   </div>
 
-  <!-- MAIN -->
-  <div id="mainApp">
+  <!-- MAIN (disembunyikan dulu) -->
+  <div id="mainApp" style="display:none;">
     <div class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <h3>Inspekta</h3>
-          <button class="toggle-btn" onclick="toggleSidebar()"><span class="material-icons">menu</span></button>
+          <button type="button" class="toggle-btn" onclick="toggleSidebar()">
+            <span class="material-icons">menu</span>
+          </button>
         </div>
       </div>
 
@@ -65,6 +67,10 @@
       <div class="menu-item" onclick="logout()">
         <span class="material-icons">logout</span><span class="menu-text">Keluar</span>
       </div>
+      
+      <div class="menu-item" data-page="akun" onclick="showPage('akun')">
+        <span class="material-icons">manage_accounts</span><span class="menu-text">Manajemen Akun</span>
+      </div>
     </div>
 
     <div class="main-content">
@@ -87,8 +93,8 @@
       <!-- MASTER -->
       <div id="page-master" class="page-section">
         <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
-          <button class="btn btn-primary" id="tabMasterPPI" onclick="switchMasterTab('masterppi')" style="width:auto;">Master PPI</button>
-          <button class="btn btn-outline" id="tabBatch" onclick="switchMasterTab('batch')" style="width:auto;">Batch Record</button>
+          <button type="button" class="btn btn-primary" id="tabMasterPPI" onclick="switchMasterTab('masterppi')" style="width:auto;">Master PPI</button>
+          <button type="button" class="btn btn-outline" id="tabBatch" onclick="switchMasterTab('batch')" style="width:auto;">Batch Record</button>
         </div>
 
         <div id="master-masterppi">
@@ -116,10 +122,12 @@
               <div class="input-group"><label>No Dokumen</label><input type="text" id="mpNoDokumen"></div>
               <div class="input-group"><label>Berlaku Tanggal</label><input type="date" id="mpBerlakuTanggal"></div>
             </div>
-            <button class="btn btn-outline" onclick="hitungAnsiMasterPPI()" style="width:auto;margin-bottom:12px;">Hitung ANSI</button>
+            <button type="button" class="btn btn-outline" onclick="hitungAnsiMasterPPI()" style="width:auto;margin-bottom:12px;">Hitung ANSI</button>
             <div id="mpAnsiBox" style="display:none;background:#E8F4F8;border-left:4px solid #0084C9;padding:12px;border-radius:8px;margin-bottom:12px;font-size:13px;"></div>
-            <input type="hidden" id="mpAnsi1"><input type="hidden" id="mpAnsi2"><input type="hidden" id="mpAnsi3">
-            <button class="btn btn-primary" id="btnSimpanMasterPPI" onclick="submitMasterPPI()">Simpan Master PPI</button>
+            <input type="hidden" id="mpAnsi1">
+            <input type="hidden" id="mpAnsi2">
+            <input type="hidden" id="mpAnsi3">
+            <button type="button" class="btn btn-primary" id="btnSimpanMasterPPI" onclick="submitMasterPPI()">Simpan Master PPI</button>
           </div>
 
           <div class="card">
@@ -151,7 +159,6 @@
           </div>
         </div>
 
-        <!-- TAB BATCH -->
         <div id="master-batch" style="display:none;">
           <div class="card">
             <h3 style="margin-top:0; color:var(--primary);">Buat Batch Record</h3>
@@ -175,7 +182,7 @@
               <label>Max Lot</label>
               <input type="text" id="brMaxLot" placeholder="F">
             </div>
-            <button class="btn btn-primary" id="btnSimpanBatch" onclick="submitBatchRecord()">Simpan Batch Record</button>
+            <button type="button" class="btn btn-primary" id="btnSimpanBatch" onclick="submitBatchRecord()">Simpan Batch Record</button>
           </div>
 
           <div class="card">
@@ -200,15 +207,208 @@
         </div>
       </div>
 
-      <!-- IPC placeholder pages remain in full version below via modules -->
-      <div id="page-ipc-placeholder" class="page-section" style="display:none;"></div>
-      <div id="page-lpf" class="page-section"><div class="card"><p>LPF & Verifikasi — Fase 3</p></div></div>
-      <div id="page-capa" class="page-section"><div class="card"><p>Root Cause & CAPA — Fase 4</p></div></div>
-      <div id="page-akun" class="page-section"><div class="card"><p>Manajemen Akun</p></div></div>
+      <!-- IPC -->
+      <div id="page-ipc" class="page-section">
+        <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-primary" id="tabFilling" onclick="switchIpcTab('filling')" style="width:auto;">IPC Filling</button>
+          <button type="button" class="btn btn-outline" id="tabKemas" onclick="switchIpcTab('kemas')" style="width:auto;">IPC Kemas</button>
+        </div>
+
+        <div id="ipc-filling">
+          <div class="card">
+            <h3 style="margin-top:0; color:var(--primary);">Form IPC Filling</h3>
+            <div class="input-group">
+              <label>No BN</label>
+              <div style="display:flex; gap:8px;">
+                <input type="text" id="fNoBN" placeholder="Ketik No BN" style="flex:1;">
+                <button type="button" class="btn btn-outline" onclick="cariBatchIpc('FILLING')" style="width:auto;">Cari</button>
+              </div>
+            </div>
+            <div id="fInfoBatch" style="display:none; background:#E8F0FE; border-radius:8px; padding:14px; margin-bottom:16px; font-size:13px;"></div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="input-group"><label>Lot</label><input type="text" id="fLot" placeholder="A / B / C"></div>
+              <div class="input-group"><label>Jumlah Sampel</label><input type="number" id="fJmlSampel"></div>
+            </div>
+            <div style="background:#F8F9FA; border-radius:8px; padding:14px; margin-bottom:16px;">
+              <div style="font-size:12px; font-weight:700; color:#666; margin-bottom:10px;">PEMERIKSAAN FISIK</div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div class="input-group" style="margin:0;"><label style="font-size:12px;">Flexi Bag</label><select id="fFlexiBag"><option>OK</option><option>NOK</option></select></div>
+                <div class="input-group" style="margin:0;"><label style="font-size:12px;">Port</label><select id="fPort"><option>OK</option><option>NOK</option></select></div>
+                <div class="input-group" style="margin:0;"><label style="font-size:12px;">Cap</label><select id="fCap"><option>OK</option><option>NOK</option></select></div>
+                <div class="input-group" style="margin:0;"><label style="font-size:12px;">Printing</label><select id="fPrinting"><option>OK</option><option>NOK</option></select></div>
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Hasil Akhir</label>
+              <select id="fHasil" onchange="document.getElementById('fCatatanGroup').style.display=this.value==='NOK'?'block':'none'">
+                <option value="OK">OK</option>
+                <option value="NOK">NOK</option>
+              </select>
+            </div>
+            <div class="input-group" id="fCatatanGroup" style="display:none;">
+              <label>Catatan Masalah</label>
+              <textarea id="fCatatan" rows="3"></textarea>
+            </div>
+            <button type="button" class="btn btn-primary" id="btnSimpanFilling" onclick="submitIpcFilling()">Simpan IPC Filling</button>
+          </div>
+        </div>
+
+        <div id="ipc-kemas" style="display:none;">
+          <div class="card">
+            <h3 style="margin-top:0; color:var(--primary);">Form IPC Kemas</h3>
+            <div class="input-group">
+              <label>No BN</label>
+              <div style="display:flex; gap:8px;">
+                <input type="text" id="kNoBN" placeholder="Ketik No BN" style="flex:1;">
+                <button type="button" class="btn btn-outline" onclick="cariBatchIpc('KEMAS')" style="width:auto;">Cari</button>
+              </div>
+            </div>
+            <div id="kInfoBatch" style="display:none; background:#E8F0FE; border-radius:8px; padding:14px; margin-bottom:16px; font-size:13px;"></div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="input-group"><label>Lot</label><input type="text" id="kLot" placeholder="A / B / C"></div>
+              <div class="input-group"><label>Jumlah Sampel</label><input type="number" id="kJmlSampel"></div>
+            </div>
+            <div style="background:#F8F9FA; border-radius:8px; padding:14px; margin-bottom:16px;">
+              <div style="font-size:12px; font-weight:700; color:#666; margin-bottom:10px;">PEMERIKSAAN FISIK</div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div class="input-group" style="margin:0;"><label style="font-size:12px;">Coding</label><select id="kCoding"><option>OK</option><option>NOK</option></select></div>
+                <div class="input-group" style="margin:0;"><label style="font-size:12px;">Overwrapping</label><select id="kOverwrapping"><option>OK</option><option>NOK</option></select></div>
+                <div class="input-group" style="margin:0;"><label style="font-size:12px;">Brosur</label><select id="kBrosur"><option>OK</option><option>NOK</option></select></div>
+                <div class="input-group" style="margin:0;"><label style="font-size:12px;">Suhu</label><input type="text" id="kSuhu" placeholder="25°C"></div>
+                <div class="input-group" style="margin:0;"><label style="font-size:12px;">Master Box</label><input type="text" id="kMasterBox"></div>
+                <div class="input-group" style="margin:0;"><label style="font-size:12px;">Bag OK</label><input type="number" id="kBagOK" value="0"></div>
+                <div class="input-group" style="margin:0;"><label style="font-size:12px;">Bag NOK</label><input type="number" id="kBagNOK" value="0"></div>
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Hasil Akhir</label>
+              <select id="kHasil" onchange="document.getElementById('kCatatanGroup').style.display=this.value==='NOK'?'block':'none'">
+                <option value="OK">OK</option>
+                <option value="NOK">NOK</option>
+              </select>
+            </div>
+            <div class="input-group" id="kCatatanGroup" style="display:none;">
+              <label>Catatan Masalah</label>
+              <textarea id="kCatatan" rows="3"></textarea>
+            </div>
+            <button type="button" class="btn btn-primary" id="btnSimpanKemas" onclick="submitIpcKemas()">Simpan IPC Kemas</button>
+          </div>
+        </div>
+      </div>
+
+  <!-- LPF -->
+<div id="page-lpf" class="page-section">
+  <div class="card">
+    <h3 style="margin-top:0;color:var(--primary);">Buat LPF / Laporan Masalah</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="input-group"><label>No BN</label><input type="text" id="lpfNoBN"></div>
+      <div class="input-group"><label>Jenis</label>
+        <select id="lpfJenis"><option value="FILLING">FILLING</option><option value="KEMAS">KEMAS</option></select>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="input-group"><label>Lot</label><input type="text" id="lpfLot"></div>
+      <div class="input-group"><label>Status awal</label>
+        <select id="lpfStatus"><option value="OPEN">OPEN</option><option value="VERIFIKASI">VERIFIKASI</option></select>
+      </div>
+    </div>
+    <div class="input-group"><label>Masalah</label><textarea id="lpfMasalah" rows="3"></textarea></div>
+    <div class="input-group"><label>Tindakan</label><textarea id="lpfTindakan" rows="2"></textarea></div>
+    <button type="button" class="btn btn-primary" onclick="submitLpf()">Simpan LPF</button>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0;">Daftar LPF</h3>
+    <select id="filterLpf" onchange="loadLpfList()" style="padding:8px;border-radius:6px;border:1px solid #ddd;margin-bottom:10px;">
+      <option value="">Semua</option>
+      <option value="OPEN" selected>OPEN</option>
+      <option value="VERIFIKASI">VERIFIKASI</option>
+      <option value="CLOSED">CLOSED</option>
+    </select>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="background:#F8F9FA;">
+            <th style="padding:8px;text-align:left;">BN</th>
+            <th style="padding:8px;text-align:left;">Jenis/Lot</th>
+            <th style="padding:8px;text-align:left;">Masalah</th>
+            <th style="padding:8px;text-align:left;">Status</th>
+            <th style="padding:8px;text-align:center;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="bodyLpf"><tr><td colspan="5" style="text-align:center;padding:16px;color:#999;">—</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- CAPA -->
+<div id="page-capa" class="page-section">
+  <div class="card">
+    <h3 style="margin-top:0;color:var(--primary);">Root Cause & CAPA</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="input-group"><label>No BN</label><input type="text" id="capaNoBN"></div>
+      <div class="input-group"><label>Sumber</label>
+        <select id="capaSumber"><option>IPC</option><option>LPF</option><option>LAIN</option></select>
+      </div>
+    </div>
+    <div class="input-group"><label>Masalah</label><textarea id="capaMasalah" rows="2"></textarea></div>
+    <div class="input-group"><label>Root Cause</label><textarea id="capaRoot" rows="2"></textarea></div>
+    <div class="input-group"><label>Corrective Action</label><textarea id="capaCA" rows="2"></textarea></div>
+    <div class="input-group"><label>Preventive Action</label><textarea id="capaPA" rows="2"></textarea></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="input-group"><label>PIC</label><input type="text" id="capaPic"></div>
+      <div class="input-group"><label>Target Selesai</label><input type="date" id="capaTarget"></div>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="submitCapa()">Simpan CAPA</button>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0;">Daftar CAPA</h3>
+    <select id="filterCapa" onchange="loadCapaList()" style="padding:8px;border-radius:6px;border:1px solid #ddd;margin-bottom:10px;">
+      <option value="">Semua</option>
+      <option value="OPEN" selected>OPEN</option>
+      <option value="ON_PROGRESS">ON_PROGRESS</option>
+      <option value="CLOSED">CLOSED</option>
+    </select>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="background:#F8F9FA;">
+            <th style="padding:8px;text-align:left;">BN</th>
+            <th style="padding:8px;text-align:left;">Masalah</th>
+            <th style="padding:8px;text-align:left;">PIC</th>
+            <th style="padding:8px;text-align:left;">Status</th>
+            <th style="padding:8px;text-align:center;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="bodyCapa"><tr><td colspan="5" style="text-align:center;padding:16px;color:#999;">—</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- AKUN -->
+<div id="page-akun" class="page-section">
+  <div class="card">
+    <h3 style="margin-top:0;color:var(--primary);">Manajemen Akun</h3>
+    <p style="font-size:13px;color:#666;">User dibuat di Supabase Authentication. Role diatur di sini.</p>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="background:#F8F9FA;">
+            <th style="padding:8px;text-align:left;">Nama</th>
+            <th style="padding:8px;text-align:left;">Role</th>
+            <th style="padding:8px;text-align:center;">Ubah Role</th>
+          </tr>
+        </thead>
+        <tbody id="bodyAkun"><tr><td colspan="3" style="text-align:center;padding:16px;color:#999;">—</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
     </div>
   </div>
 
+  <!-- HANYA 1 SCRIPT INI -->
   <script type="module" src="./js/app.js"></script>
-  <script type="module" src="./js/master-ui.js"></script>
 </body>
 </html>
