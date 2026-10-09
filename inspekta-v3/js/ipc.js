@@ -21,10 +21,7 @@ export async function getBatchFullByBN(noBN) {
 
 export async function getLotsDone(batchId, jenis) {
   const table = jenis === 'KEMAS' ? 'ipc_kemas' : 'ipc_filling';
-  const { data, error } = await supabase
-    .from(table)
-    .select('lot')
-    .eq('batch_id', batchId);
+  const { data, error } = await supabase.from(table).select('lot').eq('batch_id', batchId);
   if (error) throw error;
   return (data || []).map(r => (r.lot || '').toUpperCase());
 }
@@ -39,6 +36,7 @@ export async function getAnsiStatus(productId) {
   return data;
 }
 
+/** Update ANSI setelah 1 lot IPC */
 export async function updateAnsiAfterIpc(productId, hasil, noBN) {
   let row = await getAnsiStatus(productId);
   let level = row?.ansi_aktif || 2;
@@ -49,6 +47,7 @@ export async function updateAnsiAfterIpc(productId, hasil, noBN) {
   if (hasil === 'OK') {
     clean += 1;
     problem = 0;
+    // 10 batch bersih: dari 3→2 atau dari 2→1
     if (clean >= 10) {
       if (level === 3) level = 2;
       else if (level === 2) level = 1;
@@ -61,8 +60,9 @@ export async function updateAnsiAfterIpc(productId, hasil, noBN) {
     if (problem >= 2 && level < 3) level = 3;
   }
 
-  const note = `${new Date().toISOString().slice(0, 10)} BN:${noBN} ${hasil} → L${level}`;
-  riwayat = ((riwayat ? riwayat + ' | ' : '') + note).slice(-500);
+  const note = `${new Date().toISOString().slice(0, 10)} BN:${noBN} ${hasil} → L${level} (c${clean}/p${problem})`;
+  riwayat = (riwayat ? riwayat + ' | ' : '') + note;
+  if (riwayat.length > 500) riwayat = riwayat.slice(-500);
 
   if (row) {
     const { error } = await supabase.from('ansi_status').update({
@@ -89,21 +89,13 @@ export async function updateAnsiAfterIpc(productId, hasil, noBN) {
 }
 
 export async function saveIpcFilling(payload) {
-  const { data, error } = await supabase
-    .from('ipc_filling')
-    .insert(payload)
-    .select()
-    .single();
+  const { data, error } = await supabase.from('ipc_filling').insert(payload).select().single();
   if (error) throw error;
   return data;
 }
 
 export async function saveIpcKemas(payload) {
-  const { data, error } = await supabase
-    .from('ipc_kemas')
-    .insert(payload)
-    .select()
-    .single();
+  const { data, error } = await supabase.from('ipc_kemas').insert(payload).select().single();
   if (error) throw error;
   return data;
 }
@@ -114,4 +106,10 @@ export async function updateBatchStatus(batchId, status) {
     .update({ status, updated_at: new Date().toISOString() })
     .eq('id', batchId);
   if (error) throw error;
+}
+
+export async function getRecentIpc(limit = 20) {
+  const { data: f } = await supabase.from('ipc_filling').select('*').order('created_at', { ascending: false }).limit(limit);
+  const { data: k } = await supabase.from('ipc_kemas').select('*').order('created_at', { ascending: false }).limit(limit);
+  return { filling: f || [], kemas: k || [] };
 }
