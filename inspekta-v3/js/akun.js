@@ -10,6 +10,9 @@ export async function getProfiles() {
 }
 
 export async function updateRole(userId, role) {
-  const { error } = await supabase.from('profiles').update({ role }).eq('id', userId);
+  const { error } = await supabase
+    .from('profiles')
+    .update({ role })
+    .eq('id', userId);
   if (error) throw error;
 }
