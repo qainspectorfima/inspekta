@@ -9,17 +9,24 @@ export async function getLpfList(status) {
 }
 
 export async function createLpf(payload) {
-  const { data, error } = await supabase.from('lpf_records').insert(payload).select().single();
+  const { data, error } = await supabase
+    .from('lpf_records')
+    .insert(payload)
+    .select()
+    .single();
   if (error) throw error;
   return data;
 }
 
 export async function verifyLpf(id, catatan, verifier) {
-  const { error } = await supabase.from('lpf_records').update({
-    status: 'CLOSED',
-    diverifikasi_oleh: verifier,
-    catatan_verifikasi: catatan,
-    updated_at: new Date().toISOString()
-  }).eq('id', id);
+  const { error } = await supabase
+    .from('lpf_records')
+    .update({
+      status: 'CLOSED',
+      diverifikasi_oleh: verifier,
+      catatan_verifikasi: catatan,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', id);
   if (error) throw error;
 }
